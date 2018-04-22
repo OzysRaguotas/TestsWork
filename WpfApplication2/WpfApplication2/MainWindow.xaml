@@ -1,0 +1,238 @@
+﻿<Window x:Class="WpfApplication2.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:WpfApplication2.ViewModel"
+        mc:Ignorable="d"
+        Title="" Height="350" Width="525" Background="Black" FontSize="14">
+    <Window.DataContext>
+        <local:ViewModelLocator/>
+    </Window.DataContext>
+    <Window.Resources>
+        <Style TargetType="Label">
+            <Setter Property="HorizontalAlignment" Value="Right"></Setter>
+            <Setter Property="VerticalAlignment" Value="Center"></Setter>
+            <Setter Property="Background" Value="Black"></Setter>
+            <Setter Property="Foreground" Value="LightGray"></Setter>
+        </Style>
+        <Style TargetType="Slider">
+            <Setter Property="Minimum" Value="-100"></Setter>
+            <Setter Property="Maximum" Value="100"></Setter>
+            <Setter Property="VerticalAlignment" Value="Center"></Setter>
+            <Setter Property="Background" Value="Black"></Setter>
+            <Setter Property="Foreground" Value="Red"></Setter>
+        </Style>
+        <Style TargetType="TextBox">
+            <Setter Property="HorizontalAlignment" Value="Center"></Setter>
+            <Setter Property="VerticalAlignment" Value="Center"></Setter>
+            <Setter Property="Background" Value="Black"></Setter>
+            <Setter Property="Foreground" Value="LightGray"></Setter>
+            <Setter Property="IsReadOnly" Value="True"></Setter>
+            <Setter Property="BorderBrush" Value="Black"></Setter>
+        </Style>
+
+        <SolidColorBrush x:Key="SidebarTabBackgroundBrushSelected" Color="Gray"></SolidColorBrush>
+        <SolidColorBrush x:Key="SidebarTabBorderBrushSelected" Color="Blue"></SolidColorBrush>
+        <SolidColorBrush x:Key="SidebarTabBackgroundBrush" Color="LightGray"></SolidColorBrush>
+        <SolidColorBrush x:Key="SidebarTabBorderBrush" Color="Green"></SolidColorBrush>
+
+        <Style x:Key="SidebarTab" TargetType="TabItem">
+            <Setter Property="Padding" Value="10,12,2,12" />
+            <Setter Property="BorderThickness" Value="0,1,0,1" />
+            <Setter Property="Foreground"  Value="Blue"></Setter>
+        </Style>
+    </Window.Resources>
+    <Grid DataContext="{Binding Main}">
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition Height="10"></RowDefinition>
+            <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition Height="10"></RowDefinition>
+            <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition Height="Auto"></RowDefinition>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="150"></ColumnDefinition>
+            <ColumnDefinition></ColumnDefinition>
+            <ColumnDefinition Width="150"></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+        <StackPanel  Grid.Row="0" Grid.Column="0" Orientation="Horizontal">
+            <Label Content="FILTERS" HorizontalAlignment="Left" FontWeight="Bold"></Label>
+            <Button Background="Black" Click="Button_Click">
+                <Image Width="30" Height="30" Source="Pictures/arrow.png"/>
+            </Button>
+        </StackPanel>
+
+        <Button Grid.Row="0" Grid.Column="3" Content="Add Filters" Background="LightBlue"
+                Foreground="White" FontWeight="Bold" Command="{Binding LoadPresetsCommand}"></Button>
+
+        <Label Name="developLabel" Grid.Row="2" Grid.Column="0" Content="Develop" Foreground="White"/>
+        <Button x:Name="LockButton" Grid.Row="2" Grid.Column="2" Height="30" Width="30" HorizontalAlignment="Left" Click="LockButton_Click">
+            <Image Source="Pictures/lock.png">
+            </Image>
+        </Button>
+        <TabControl Name="PresetsTab" Grid.Row="4" Grid.ColumnSpan="3" Background="Black" Foreground="Red">
+            <TabItem Header="Adjust" Background="Black" Foreground="White">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"></RowDefinition>
+                        <RowDefinition Height="Auto"></RowDefinition>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="150"></ColumnDefinition>
+                        <ColumnDefinition Width="1*"></ColumnDefinition>
+                        <ColumnDefinition Width="150"></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+                    <Label Content="Temperature"></Label>
+                    <Slider Name="TemperatureSlider" Grid.Row="0" Grid.Column="1"  Minimum="-100" Maximum="100"
+                            IsSelectionRangeEnabled="True" SelectionStart="-100" SelectionEnd="100"
+                            Value="{Binding CurrentPresets.Temperature, Mode=TwoWay}">
+                        <Slider.Resources>
+                            <LinearGradientBrush x:Key="{x:Static SystemColors.HighlightBrushKey}"  EndPoint="1,0.5" StartPoint="-1,0.5">
+                                <GradientStop Color="Yellow" Offset="1"/>
+                                <GradientStop Color="Blue" Offset="0.5"/>
+                            </LinearGradientBrush>
+                        </Slider.Resources>
+                    </Slider>
+                    <TextBox Text="{Binding ElementName=TemperatureSlider, Path=Value, StringFormat='N0'}" Name="TemperatureTextBox" Grid.Column="2" />
+                    <Label Content="Tint" Grid.Row="1" Grid.Column="0" ></Label>
+                    <TextBox Text="{Binding ElementName=TintSlider, Path=Value, StringFormat='N0'}" Name="TintTextBox" Grid.Column="2" Grid.Row="1"/>
+                    <Slider Name="TintSlider" Grid.Row="1" Grid.Column="1" Minimum="-100" Maximum="100"
+                     IsSelectionRangeEnabled="True" SelectionStart="-100" SelectionEnd="100"
+                            Value="{Binding CurrentPresets.Tint, Mode=TwoWay}">
+                        <Slider.Resources>
+                            <LinearGradientBrush x:Key="{x:Static SystemColors.HighlightBrushKey}" EndPoint="1,0.5" StartPoint="-1,0.5">
+                                <GradientStop Color="Purple" Offset="1"/>
+                                <GradientStop Color="Green" Offset="0.5"/>
+                            </LinearGradientBrush>
+                        </Slider.Resources>
+                    </Slider>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Transform" Background="Black" Foreground="White" Height="22" VerticalAlignment="Top">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"></RowDefinition>
+                        <RowDefinition Height="Auto"></RowDefinition>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="150"></ColumnDefinition>
+                        <ColumnDefinition Width="*"></ColumnDefinition>
+                        <ColumnDefinition Width="150"></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+                    <Label Content="Exposure"></Label>
+                    <Slider Name="ExposureSlider" Grid.Row="0" Grid.Column="1" Margin="5px" Minimum="-1.00" Maximum="1.00"
+                            IsSelectionRangeEnabled="True" SelectionStart="-100" SelectionEnd="100"
+                            Value="{Binding CurrentPresets.Exposure, Mode=TwoWay}">
+                        <Slider.Resources>
+                            <LinearGradientBrush x:Key="{x:Static SystemColors.HighlightBrushKey}"  EndPoint="1,0.5" StartPoint="-1,0.5">
+                                <GradientStop Color="White" Offset="1"/>
+                                <GradientStop Color="Gray" Offset="0.5"/>
+                            </LinearGradientBrush>
+                        </Slider.Resources>
+                    </Slider>
+                    <TextBox Text="{Binding ElementName=ExposureSlider, Path=Value, StringFormat=N2}" Name="ExposureTextBox" Grid.Column="2"/>
+                    <Label Content="Contrast" VerticalAlignment="Center" Grid.Row="1" Grid.Column="0"></Label>
+                    <Slider Name="ContrastSlider" Grid.Row="1" Grid.Column="1" Minimum="-100" Maximum="100"
+                            IsSelectionRangeEnabled="True" SelectionStart="-100" SelectionEnd="100" Margin="5px"
+                            Value="{Binding CurrentPresets.Contrast, Mode=TwoWay}">
+                        <Slider.Resources>
+                            <LinearGradientBrush x:Key="{x:Static SystemColors.HighlightBrushKey}"  EndPoint="1,0.5" StartPoint="-1,0.5">
+                                <GradientStop Color="White" Offset="1"/>
+                                <GradientStop Color="Gray" Offset="0.5"/>
+                            </LinearGradientBrush>
+                        </Slider.Resources>
+                    </Slider>
+                    <TextBox Text="{Binding ElementName=ContrastSlider, Path=Value, StringFormat='N0'}" Name="ContrastTextBox" Grid.Column="2" Grid.Row="1"/>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Lens" Background="Black" Foreground="White">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"></RowDefinition>
+                        <RowDefinition Height="Auto"></RowDefinition>
+                        <RowDefinition Height="Auto"></RowDefinition>
+                        <RowDefinition Height="Auto"></RowDefinition>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="150"></ColumnDefinition>
+                        <ColumnDefinition Width="*"></ColumnDefinition>
+                        <ColumnDefinition Width="150"></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+
+                    <Label Content="Highlight"></Label>
+                    <Slider Name="HighlightSlider" Grid.Row="0" Grid.Column="1" Minimum="-100" Maximum="100"
+                            IsSelectionRangeEnabled="True" SelectionStart="-100" SelectionEnd="100" Margin="5px"
+                            Value="{Binding CurrentPresets.HighLight, Mode=TwoWay}">
+                        <Slider.Resources>
+                            <LinearGradientBrush x:Key="{x:Static SystemColors.HighlightBrushKey}"  EndPoint="1,0.5" StartPoint="-1,0.5">
+                                <GradientStop Color="White" Offset="1"/>
+                                <GradientStop Color="Gray" Offset="0.5"/>
+                            </LinearGradientBrush>
+                        </Slider.Resources>
+                    </Slider>
+                    <TextBox Text="{Binding ElementName=HighlightSlider, Path=Value, StringFormat='N0'}" Name="HighLightTextBox" Grid.Column="2" Grid.Row="0"/>
+
+                    <Label Content="Shadows" VerticalAlignment="Center" Grid.Row="1" Grid.Column="0" HorizontalAlignment="Right"></Label>
+                    <Slider Name="ShadowsSlider" Grid.Row="1" Grid.Column="1" Minimum="-100" Maximum="100"
+                            IsSelectionRangeEnabled="True" SelectionStart="-100" SelectionEnd="100" Margin="5px"
+                            Value="{Binding CurrentPresets.Shadows, Mode=TwoWay}">
+                        <Slider.Resources>
+                            <LinearGradientBrush x:Key="{x:Static SystemColors.HighlightBrushKey}"  EndPoint="1,0.5" StartPoint="-1,0.5">
+                                <GradientStop Color="White" Offset="1"/>
+                                <GradientStop Color="Gray" Offset="0.5"/>
+                            </LinearGradientBrush>
+                        </Slider.Resources>
+                    </Slider>
+                    <TextBox Text="{Binding ElementName=ShadowsSlider, Path=Value, StringFormat='N0'}" Name="ShadowsTextBox" Grid.Column="2" Grid.Row="1"/>
+
+                    <Label Content="Whites" Grid.Row="2"></Label>
+                    <TextBox Text="{Binding ElementName=WhitesSlider, Path=Value, StringFormat='N0'}" Name="WhitesTextBox" Grid.Column="2" Grid.Row="2"/>
+                    <Slider Name="WhitesSlider" Grid.Column="1" Grid.Row="2" Minimum="-100" Maximum="100"
+                            IsSelectionRangeEnabled="True" SelectionStart="-100" SelectionEnd="100" Margin="5px"
+                            Value="{Binding CurrentPresets.Whites, Mode=TwoWay}">
+                        <Slider.Resources>
+                            <LinearGradientBrush x:Key="{x:Static SystemColors.HighlightBrushKey}"  EndPoint="1,0.5" StartPoint="-1,0.5">
+                                <GradientStop Color="White" Offset="1"/>
+                                <GradientStop Color="Gray" Offset="0.5"/>
+                            </LinearGradientBrush>
+                        </Slider.Resources>
+
+                    </Slider>
+                    <Label Content="Blacks" Grid.Row="3"></Label>
+                    <Slider Name="BlacksSlider" Grid.Column="1" Grid.Row="3" Minimum="-100" Maximum="100"
+                            IsSelectionRangeEnabled="True" SelectionStart="-100" SelectionEnd="100" Margin="5px"
+                            Value="{Binding CurrentPresets.Blacks, Mode=TwoWay}">
+                        <Slider.Resources>
+                            <LinearGradientBrush x:Key="{x:Static SystemColors.HighlightBrushKey}"  EndPoint="1,0.5" StartPoint="-1,0.5">
+                                <GradientStop Color="White" Offset="1"/>
+                                <GradientStop Color="Gray" Offset="0.5"/>
+                            </LinearGradientBrush>
+                        </Slider.Resources>
+                    </Slider>
+                    <TextBox Text="{Binding ElementName=BlacksSlider, Path=Value, StringFormat='N0'}" Name="BlacksTextBox" Grid.Column="2" Grid.Row="3"/>
+                </Grid>
+            </TabItem>
+        </TabControl>
+        <Label Name="clarityLbel" Grid.Row="5" Grid.Column="0" Content="Clarity"></Label>
+        <Slider Grid.Row="5" Grid.Column="1" Name="ClaritySlider" Minimum="0" Maximum="100"
+                            IsSelectionRangeEnabled="True" SelectionStart="0" SelectionEnd="100" Margin="5px"
+                Value="{Binding CurrentPresets.Clarity, Mode=TwoWay}">
+        </Slider>
+        <TextBox Name ="clarityTextBox" Grid.Row="5" Grid.Column="2" Text="{Binding ElementName=ClaritySlider, Path=Value, StringFormat='N0'}"></TextBox>
+
+        <Label Name ="filtersLabel" Grid.Row="6" Grid.Column="0" Content="FilterAmount"></Label>
+        <Slider Grid.Row="6" Grid.Column="1" Name="FilterAmountSlider" Minimum="0" Maximum="100"
+                            IsSelectionRangeEnabled="True" SelectionStart="0" SelectionEnd="100" Margin="5px"
+                Value="{Binding CurrentPresets.FiltersAmount, Mode=TwoWay}">
+        </Slider>
+        <TextBox Name ="filtersAmountTextBox" Grid.Row="6" Grid.Column="2" Text="{Binding ElementName=FilterAmountSlider, Path=Value, StringFormat='N0'}"></TextBox>
+
+        <Button Grid.Row="7" Grid.Column="2" Content="Save filters presets" FontWeight="Bold" Foreground="Gray" Background="LightGray"
+                Command="{Binding SavePresetsCommand}"></Button>
+    </Grid>
+</Window>
